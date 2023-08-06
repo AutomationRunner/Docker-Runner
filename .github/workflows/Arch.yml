@@ -37,7 +37,7 @@ jobs:
       - name: Build and Push Arch Image
         uses: docker/build-push-action@v4
         with:
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
           push: true
           tags: vineelsai/arch:latest, vineelsai/arch:${{ steps.get_time.outputs.date }}
           file: ./Arch/Dockerfile
