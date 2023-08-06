@@ -1,0 +1,3 @@
+FROM vineelsai/arch:arm64
+
+RUN pacman -Syyu --noconfirm
