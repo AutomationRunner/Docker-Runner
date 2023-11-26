@@ -53,4 +53,6 @@ jobs:
           docker buildx build --platform linux/arm64 -t arch:arm64 -f ./Arch/Dockerfile.arm64 .
           docker create --name arch-arm64 arch:arm64
           docker export arch-arm64 | docker import - vineelsai/arch:arm64
+          docker export arch-arm64 | docker import - vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
           docker push vineelsai/arch:arm64
+          docker push vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
