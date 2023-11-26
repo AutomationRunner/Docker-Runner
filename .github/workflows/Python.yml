@@ -7,6 +7,12 @@ on:
     paths:
       - "Python/*"
       - ".github/workflows/Python.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "Python/*"
+      - ".github/workflows/Python.yml"
   schedule:
     - cron: "0 0 * * 1"
 
@@ -38,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64, linux/arm64
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: vineelsai/python:latest, vineelsai/python:${{ steps.get_time.outputs.date }}
           file: ./Python/Dockerfile

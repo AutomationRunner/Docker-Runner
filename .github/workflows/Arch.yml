@@ -7,6 +7,12 @@ on:
     paths:
       - "Arch/*"
       - ".github/workflows/Arch.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "Arch/*"
+      - ".github/workflows/Arch.yml"
   schedule:
     - cron: "0 0 * * 1"
 
@@ -38,14 +44,25 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: vineelsai/arch:latest, vineelsai/arch:${{ steps.get_time.outputs.date }}
           file: ./Arch/Dockerfile
 
-      - name: Build and Push Arch Image
+      - name: Build Arch Arm64 Image
         uses: docker/build-push-action@v5
         with:
           platforms: linux/arm64
-          push: true
-          tags: vineelsai/arch:arm64, vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
+          push: false
+          load: true
+          tags: vineelsai/arch:arm64
           file: ./Arch/Dockerfile.arm64
+
+      - name: Extract and Push Arch Arm64 Image
+        run: |
+          docker create --platform linux/arm64 --name arch-arm64 vineelsai/arch:arm64 bash
+          docker export arch-arm64 | docker import - vineelsai/arch:arm64
+          docker export arch-arm64 | docker import - vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
+          if [[ "${{github.ref == 'refs/heads/main'}}" == "true" ]]; then
+            docker push vineelsai/arch:arm64
+            docker push vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
+          fi
