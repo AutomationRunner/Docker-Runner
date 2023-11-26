@@ -62,5 +62,7 @@ jobs:
           docker create --platform linux/arm64 --name arch-arm64 vineelsai/arch:arm64 bash
           docker export arch-arm64 | docker import - vineelsai/arch:arm64
           docker export arch-arm64 | docker import - vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
-          docker push vineelsai/arch:arm64
-          docker push vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
+          if [[ "${{github.ref == 'refs/heads/main'}}" == "true" ]]; then
+            docker push vineelsai/arch:arm64
+            docker push vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
+          fi
