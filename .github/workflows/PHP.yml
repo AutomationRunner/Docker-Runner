@@ -7,6 +7,12 @@ on:
     paths:
       - "PHP/*"
       - ".github/workflows/PHP.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "PHP/*"
+      - ".github/workflows/PHP.yml"
   schedule:
     - cron: "0 0 * * 1"
 
@@ -38,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64, linux/arm64
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: vineelsai/php:latest, vineelsai/php:${{ steps.get_time.outputs.date }}
           file: ./PHP/Dockerfile

@@ -7,6 +7,12 @@ on:
     paths:
       - "Fedora/*"
       - ".github/workflows/Fedora.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "Fedora/*"
+      - ".github/workflows/Fedora.yml"
   schedule:
     - cron: "0 0 * * 1"
 
@@ -38,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64, linux/arm64
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: vineelsai/fedora:latest, vineelsai/fedora:${{ steps.get_time.outputs.date }}
           file: ./Fedora/Dockerfile

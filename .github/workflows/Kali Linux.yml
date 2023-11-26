@@ -7,6 +7,12 @@ on:
     paths:
       - "Kali Linux/*"
       - ".github/workflows/Kali Linux.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "Kali Linux/*"
+      - ".github/workflows/Kali Linux.yml"
   schedule:
     - cron: "0 0 * * 1"
 
@@ -38,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64, linux/arm64
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: vineelsai/kali:latest, vineelsai/kali:${{ steps.get_time.outputs.date }}
           file: ./Kali Linux/Dockerfile
