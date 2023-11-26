@@ -48,10 +48,18 @@ jobs:
           tags: vineelsai/arch:latest, vineelsai/arch:${{ steps.get_time.outputs.date }}
           file: ./Arch/Dockerfile
 
-      - name: Build and Push Arch Arm64 Image
+      - name: Build Arch Arm64 Image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/arm64
+          push: false
+          load: true
+          tags: vineelsai/arch:arm64
+          file: ./Arch/Dockerfile.arm64
+
+      - name: Extract and Push Arch Arm64 Image
         run: |
-          docker buildx build --platform linux/arm64 -t arch:arm64 -f ./Arch/Dockerfile.arm64 .
-          docker create --name arch-arm64 arch:arm64
+          docker create --platform linux/arm64 --name arch-arm64 vineelsai/arch:arm64 bash
           docker export arch-arm64 | docker import - vineelsai/arch:arm64
           docker export arch-arm64 | docker import - vineelsai/arch:arm64-${{ steps.get_time.outputs.date }}
           docker push vineelsai/arch:arm64
